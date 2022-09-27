@@ -11,7 +11,6 @@ void print_linked_list(node_t* head);
 node_t* remove_element_with_specific_value(int value, node_t *head);    //deletes first occurence. returns new list head
 
 int main(void) {
-    create_node();
     node_t *temp=NULL, *head=NULL, *ogheadref=NULL, *dellisthead=NULL;
     int value;
 
@@ -35,7 +34,7 @@ int main(void) {
     print_linked_list(ogheadref); 
 
     //delete element with value
-    value = 5;
+    value = 9;
     dellisthead = remove_element_with_specific_value(value, ogheadref);
     if(!dellisthead) {
         printf("element not found\n");
@@ -81,7 +80,7 @@ node_t* remove_element_with_specific_value(int value, node_t *head) {
 
     temp = head;
 
-    while(head->next) {                 //must loop with head->next since accessing head->next without knowing it is NULL may cause segfault
+    while(head->next) {                 //MUST loop with head->next since accessing head->next without knowing it is NULL may cause segfault
         if(head->next->value == value)  //need to reach the previous element and set its pointer to head's next
         {
             delNode = head->next;
@@ -90,6 +89,13 @@ node_t* remove_element_with_specific_value(int value, node_t *head) {
             break;
         }
         head = head->next;
+    }
+
+    //need to check for last element since previous loop stops at second last element
+    if(head->value = value)
+    {
+        //previous element needs to point to NULL
+        //HOW TO SOLVE THIS PROBLEM?
     }
 
     if(!(head->next))           //element not found in the list
