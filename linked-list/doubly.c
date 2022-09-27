@@ -9,10 +9,10 @@ typedef struct node {
 
 node_t* create_node();
 void print_linked_list_using_tail(node_t* tail);
-int remove_node_with_value(int value, node_t *tail);
+node_t* remove_node_with_value(int value, node_t *tail, node_t *head);
 
 int main(void) {
-    node_t *head, *tail, *temp;
+    node_t *head, *tail, *temp, *check;
     int value;
 
     //create list head
@@ -41,10 +41,10 @@ int main(void) {
 
     //delete first occurence of node with ith value
     value = 9;
-    value = remove_node_with_value(value, tail);    //original head was pushed to the deepest end of the list. 
-    if (!value) {
+    check = remove_node_with_value(value, tail, head);    //original head was pushed to the deepest end of the list. 
+    if (check) {
         printf("removed element! printing list again:- \n");
-        print_linked_list_using_tail(tail);
+        print_linked_list_using_tail(check);
     } else {
         printf("elemenet not found\n");
     }
@@ -74,16 +74,32 @@ void print_linked_list_using_tail(node_t* tail) {
     }
 }
 
-int remove_node_with_value(int value, node_t *tail) {
-    while(tail) {
+node_t* remove_node_with_value(int value, node_t *tail, node_t *head) {
+    node_t *newTail = tail;
+    if(tail->value == value)    //edge case: first node
+    {
+        tail->next->prev = NULL;
+        newTail = tail->next;
+        free(tail);
+        return(newTail);  
+    }
+
+    if(head->value == value)    //edge case: first node
+    {
+        head->prev->next = NULL;
+        free(head);
+        return(newTail);  
+    }
+
+    while(tail) {   //avoid head and tail nodes
         if(tail->value == value) {
             tail->next->prev = tail->prev;
             tail->prev->next = tail->next;
             free(tail);
-            return (0);
+            return (newTail);
         }
         tail = tail->next;
     }
 
-    return (-1);
+    return (NULL);
 }
