@@ -9,12 +9,17 @@ typedef struct node {
 
 node_t* create_node();
 void print_linked_list_using_tail(node_t* tail);
+int remove_node_with_value(int value, node_t *tail);
 
 int main(void) {
     node_t *head, *tail, *temp;
+    int value;
 
     //create list head
     head = create_node();
+
+    //storing original head as after creating the list, it will be pushed to the deepest end of the list and will effectively represent the tail.
+    tail = head;
 
     //create list of n elements
     for (int i=0; i<9; ) {
@@ -32,12 +37,17 @@ int main(void) {
     }
 
     //print created list    
-    //head will be used as tail here since that is what it effectively represents
-    print_linked_list_using_tail(head); //no need to store head reference here; although it will be helpful to keep a reference
+    print_linked_list_using_tail(tail); //no need to store reference ptr here to print the list; although it will be helpful to keep a reference
 
     //delete first occurence of node with ith value
-
-
+    value = 9;
+    value = remove_node_with_value(value, tail);    //original head was pushed to the deepest end of the list. 
+    if (!value) {
+        printf("removed element! printing list again:- \n");
+        print_linked_list_using_tail(tail);
+    } else {
+        printf("elemenet not found\n");
+    }
     return 0;
 }
 
@@ -59,7 +69,21 @@ void print_linked_list_using_tail(node_t* tail) {
     } else {
         while(tail) {
             printf("no. %d -> val: %d\n", ++i, tail->value);
-            tail = tail->prev;
+            tail = tail->next;
         }
     }
+}
+
+int remove_node_with_value(int value, node_t *tail) {
+    while(tail) {
+        if(tail->value == value) {
+            tail->next->prev = tail->prev;
+            tail->prev->next = tail->next;
+            free(tail);
+            return (0);
+        }
+        tail = tail->next;
+    }
+
+    return (-1);
 }
